@@ -2,19 +2,31 @@
 <style>*{box-sizing:border-box}body{margin:0;background:#f3f6fa;font-family:Arial;color:#14233b}.nav{height:70px;background:white;border-bottom:1px solid #e4eaf2;padding:0 7%;display:flex;align-items:center;font-weight:800;color:#12457e}.nav a{margin-left:auto;color:#12457e;text-decoration:none}.box{max-width:500px;margin:60px auto;padding:20px}.card{background:#fff;border:1px solid #e1e8f1;border-radius:18px;padding:32px;box-shadow:0 15px 45px #123b6414}h1{margin:8px 0}.muted{color:#68778c;line-height:1.5}label{display:block;font-weight:700;margin:20px 0 8px}input{width:100%;padding:14px;border:1px solid #cbd6e4;border-radius:10px;font-size:16px}button{width:100%;padding:14px;margin-top:22px;border:0;border-radius:10px;background:#1263c6;color:white;font-weight:800;font-size:16px}.err{display:none;background:#fff0f0;color:#a52222;padding:12px;border-radius:9px;margin-top:14px}</style>
 </head><body><div class="nav">Bihar Student Talent Portal <a href="index.html">Home</a></div><main class="box"><div class="card"><small>STUDENT ACCESS</small><h1>Login to your account</h1><p class="muted">User ID is your registered mobile number. Initial password is your date of birth.</p><div id="err" class="err"></div><label>Mobile Number / User ID</label><input id="u" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number"><label>Password / DOB</label><input id="p" type="password" placeholder="DDMMYYYY"><button onclick="go()">Login to Dashboard</button></div></main>
 
-
-window.BiharTalent=(()=>{
- const K='biharTalentAccounts';
- const get=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}};
- const put=x=>localStorage.setItem(K,JSON.stringify(x));
- return {
-  create:d=>{let a=get(),m=(d.mobile||'').replace(/\D/g,''),dob=(d.dob||'').replace(/\D/g,'');
-   if(!m||!dob)return null;if(a[m])return a[m];
-   let x={userId:m,password:dob,registrationId:'BSTR26-'+Math.floor(100000+Math.random()*900000),name:d.name||'Student',mobile:m,dob:d.dob||'',category:d.category||'',district:d.district||'',status:'Submitted',profile:d};
-   a[m]=x;put(a);return x},
-  login:(m,p)=>{let a=get(),x=a[(m||'').replace(/\D/g,'')];if(x&&x.password===String(p)){localStorage.setItem('biharTalentSession',x.mobile);return x}return null},
-  current:()=>{let m=localStorage.getItem('biharTalentSession');return m?get()[m]:null},
-  logout:()=>localStorage.removeItem('biharTalentSession')
- };
-})();
-<script>function go(){let x=BiharTalent.login(u.value,p.value);if(!x){err.textContent='Incorrect User ID or password.';err.style.display='block';return}location.href='dashboard.html'}</script></body></html>
+<script>
+const SUPABASE_URL='https://mxrwqbygssjgzztlhmei.supabase.co';
+const SUPABASE_KEY='sb_publishable_3dRCLnMjk1tJGKLpDaq5Og_sPRb5QNU';
+async function go(){
+  const mobile=u.value.trim();
+  const dob=p.value.trim();
+  err.style.display='none';
+  if(!/^\\d{10}$/.test(mobile)){err.textContent='Please enter a valid 10-digit mobile number.';err.style.display='block';return}
+  if(!/^\\d{2}\\d{2}\\d{4}$/.test(dob)){err.textContent='Please enter DOB as DDMMYYYY.';err.style.display='block';return}
+  const iso=dob.slice(4,8)+'-'+dob.slice(2,4)+'-'+dob.slice(0,2);
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/student-login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body:JSON.stringify({mobile,dob:iso})
+    });
+    const out=await res.json();
+    if(!res.ok)throw new Error(out.error||'Invalid User ID or password.');
+    localStorage.setItem('currentStudentProfile',JSON.stringify(out));
+    localStorage.setItem('currentStudent',out.mobile);
+    location.href='dashboard.html';
+  }catch(e){
+    err.textContent=e.message||'Invalid User ID or password.';
+    err.style.display='block';
+  }
+}
+</script>
+</body></html>
