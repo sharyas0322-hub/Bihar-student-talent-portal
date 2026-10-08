@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel | Bihar Student Talent Portal</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#14233b;font-family:Inter,Arial,sans-serif}
+.top{height:72px;background:#fff;border-bottom:1px solid #e3eaf2;display:flex;align-items:center;padding:0 5%;font-weight:800;color:#12457e}
+.top .badge{margin-left:12px;background:#edf4fd;color:#1263c6;padding:6px 10px;border-radius:20px;font-size:12px}
+.wrap{max-width:1250px;margin:30px auto;padding:0 20px}.hero{background:linear-gradient(120deg,#0d4e9e,#176fd0);color:#fff;border-radius:20px;padding:26px}
+.hero h1{margin:5px 0}.hero p{margin:5px 0;opacity:.9}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:18px 0}.card{background:#fff;border:1px solid #e1e8f1;border-radius:15px;padding:19px}.label{font-size:12px;text-transform:uppercase;color:#708097;font-weight:800}.num{font-size:28px;font-weight:800;margin-top:8px}
+.filters{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.filters label{font-size:12px;font-weight:800;color:#52627a}.filters select,.filters input{width:100%;margin-top:6px;padding:11px;border:1px solid #cbd7e5;border-radius:9px;background:#fff}
+.actions{display:flex;gap:10px;margin:15px 0;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:#1263c6;color:#fff}.light{background:#edf4fd;color:#1263c6}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{padding:12px;border-bottom:1px solid #e8edf3;text-align:left;font-size:13px}.table th{background:#f7f9fc;color:#53637a}.pill{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}.pending{background:#fff1d2;color:#805600}.approved{background:#e7f7ed;color:#18713b}.rejected{background:#ffe9e9;color:#a42222}
+.modal{display:none;position:fixed;inset:0;background:#10233d66;align-items:center;justify-content:center;padding:20px}.modal .card{max-width:650px;width:100%;max-height:90vh;overflow:auto}.close{float:right;border:0;background:#edf1f6;border-radius:8px;padding:7px 10px;cursor:pointer}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.stats,.filters{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">Bihar Student Talent Portal <span class="badge">ADMIN PANEL</span></header>
+<main class="wrap">
+<section class="hero"><h1>Registration Management</h1><p>Review, filter and export student applications.</p></section>
+
+<section class="stats">
+<div class="card"><div class="label">Total Applications</div><div class="num" id="total">0</div></div>
+<div class="card"><div class="label">Sports</div><div class="num" id="sports">0</div></div>
+<div class="card"><div class="label">Cultural</div><div class="num" id="cultural">0</div></div>
+<div class="card"><div class="label">Pending</div><div class="num" id="pending">0</div></div>
+</section>
+
+<section class="card">
+<div class="filters">
+<div><label>District</label><select id="district"><option value="">All Districts</option></select></div>
+<div><label>Sport / Activity</label><select id="activity"><option value="">All Activities</option></select></div>
+<div><label>Category</label><select id="category"><option value="">All</option><option>Sports</option><option>Cultural</option></select></div>
+<div><label>Status</label><select id="status"><option value="">All Status</option><option>Submitted</option><option>Approved</option><option>Rejected</option><option>Correction Required</option></select></div>
+<div><label>Search</label><input id="search" placeholder="Name / Mobile / ID"></div>
+</div>
+<div class="actions">
+<button class="btn primary" onclick="render()">Apply Filters</button>
+<button class="btn light" onclick="resetFilters()">Reset</button>
+<button class="btn primary" onclick="downloadExcel()">Download Excel</button>
+</div>
+<div class="table-wrap"><table class="table"><thead><tr><th>Registration ID</th><th>Name</th><th>Mobile</th><th>District</th><th>Category</th><th>Activity</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+</main>
+
+<div class="modal" id="modal"><div class="card"><button class="close" onclick="closeModal()">Close</button><h2>Application Details</h2><div id="details"></div></div></div>
+
+<script>
+const KEY='biharTalentAccounts';
+const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+let all=[];
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+const BIHAR_DISTRICTS=['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran (Motihari)', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur (Bhabua)', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran (Bettiah)'];
+function load(){
+ all=Object.values(get());
+ const ds=BIHAR_DISTRICTS;
+ const acts=[...new Set(all.map(x=>(x.profile&& (x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||x.category).filter(Boolean))].sort();
+ district.innerHTML='<option value="">All Districts</option>'+ds.map(x=>`<option>${esc(x)}</option>`).join('');
+ activity.innerHTML='<option value="">All Activities</option>'+acts.map(x=>`<option>${esc(x)}</option>`).join('');
+ render();
+}
+function filtered(){
+ const d=district.value,a=activity.value,c=category.value,s=status.value,q=search.value.toLowerCase().trim();
+ return all.filter(x=>{
+  const act=(x.profile&&(x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||'';
+  return (!d||x.district===d)&&(!a||act===a)&&(!c||x.category===c)&&(!s||x.status===s)&&(!q||[x.name,x.mobile,x.registrationId].some(v=>String(v||'').toLowerCase().includes(q)));
+ });
+}
+function render(){
+ const f=filtered();
+ total.textContent=all.length;sports.textContent=all.filter(x=>x.category==='Sports').length;cultural.textContent=all.filter(x=>x.category==='Cultural').length;pending.textContent=all.filter(x=>(x.status||'Submitted')==='Submitted').length;
+ rows.innerHTML=f.length?f.map((x,i)=>{
+  const act=(x.profile&&(x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||'—';
+  const st=x.status||'Submitted'; const cls=st==='Approved'?'approved':st==='Rejected'?'rejected':'pending';
+  return `<tr><td>${esc(x.registrationId)}</td><td>${esc(x.name)}</td><td>${esc(x.mobile)}</td><td>${esc(x.district||'—')}</td><td>${esc(x.category||'—')}</td><td>${esc(act)}</td><td><span class="pill ${cls}">${esc(st)}</span></td><td><button class="btn light" onclick="view(${i})">View</button></td></tr>`;
+ }).join(''):'<tr><td colspan="8">No applications found.</td></tr>';
+ window.current=f;
+}
+function view(i){
+ const x=window.current[i]; const p=x.profile||{};
+ details.innerHTML=`<p><b>Registration ID:</b> ${esc(x.registrationId)}</p>
+ <p><b>Name:</b> ${esc(x.name)}</p><p><b>Mobile:</b> ${esc(x.mobile)}</p><p><b>DOB:</b> ${esc(x.dob)}</p>
+ <p><b>District:</b> ${esc(x.district||p.district)}</p><p><b>Category:</b> ${esc(x.category)}</p>
+ <p><b>Aadhaar:</b> ${p.aadhaar?'••••••••'+String(p.aadhaar).slice(-4):'Not provided'}</p>
+ <p><b>APAAR:</b> ${p.apaar?'••••••••'+String(p.apaar).slice(-4):'Not provided'}</p>
+ <hr><button class="btn primary" onclick="setStatus('${esc(x.mobile)}','Approved')">Approve</button>
+ <button class="btn light" onclick="setStatus('${esc(x.mobile)}','Correction Required')">Correction Required</button>
+ <button class="btn" style="background:#ffe9e9;color:#a42222" onclick="setStatus('${esc(x.mobile)}','Rejected')">Reject</button>`;
+ modal.style.display='flex';
+}
+function setStatus(m,st){const a=get();if(a[m]){a[m].status=st;localStorage.setItem(KEY,JSON.stringify(a));load();closeModal();}}
+function closeModal(){modal.style.display='none'}
+function resetFilters(){district.value='';activity.value='';category.value='';status.value='';search.value='';render()}
+function downloadExcel(){
+ const f=filtered(); if(!f.length){alert('No filtered applications to export.');return}
+ const headers=['Registration ID','Name','Mobile','DOB','District','Category','Activity','Status','Registration Date'];
+ const lines=[headers,...f.map(x=>{const p=x.profile||{};return[x.registrationId,x.name,x.mobile,x.dob,x.district,x.category,(p.sport||p.activity||p.culturalCategory||''),x.status||'Submitted',x.createdAt||'']})];
+ const csv=lines.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bihar-student-registrations.csv';a.click();URL.revokeObjectURL(a.href);
+}
+load();
+</script>
+</body></html>

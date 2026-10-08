@@ -1,0 +1,20 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Student Dashboard</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f3f6fa;font-family:Arial;color:#14233b}.nav{height:70px;background:white;border-bottom:1px solid #e4eaf2;padding:0 6%;display:flex;align-items:center;font-weight:800;color:#12457e}.nav button{margin-left:auto;padding:9px 15px;border:1px solid #ccd7e5;background:white;border-radius:9px}.wrap{max-width:1050px;margin:35px auto;padding:0 20px}.hero{background:linear-gradient(120deg,#0d4e9e,#176fd0);color:white;border-radius:20px;padding:30px}.hero h1{margin:8px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}.card{background:white;border:1px solid #e1e8f1;border-radius:16px;padding:22px}.lab{font-size:12px;color:#728097;text-transform:uppercase;font-weight:800}.val{font-size:21px;font-weight:800;margin-top:8px}.status{display:inline-block;margin-top:7px;padding:7px 11px;border-radius:20px;background:#fff2d5;color:#805700;font-size:13px}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style></head>
+<body><div class="nav">Bihar Student Talent Portal <button onclick="logout()">Logout</button></div><main class="wrap"><section class="hero"><div>Student Dashboard</div><h1 id="name">Welcome</h1><div id="rid"></div></section><section class="grid"><div class="card"><div class="lab">User ID</div><div class="val" id="uid"></div></div><div class="card"><div class="lab">Registration</div><div class="val" id="cat"></div></div><div class="card"><div class="lab">Status</div><div class="val"><span class="status" id="st"></span></div></div></section><section class="card" style="margin-top:20px"><div class="lab">Application</div><p id="info">Your submitted application will appear here.</p><button onclick="print()" style="padding:11px 16px;border:0;border-radius:9px;background:#1263c6;color:white;font-weight:800">Print Registration Slip</button></section></main>
+
+
+window.BiharTalent=(()=>{
+ const K='biharTalentAccounts';
+ const get=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}};
+ const put=x=>localStorage.setItem(K,JSON.stringify(x));
+ return {
+  create:d=>{let a=get(),m=(d.mobile||'').replace(/\D/g,''),dob=(d.dob||'').replace(/\D/g,'');
+   if(!m||!dob)return null;if(a[m])return a[m];
+   let x={userId:m,password:dob,registrationId:'BSTR26-'+Math.floor(100000+Math.random()*900000),name:d.name||'Student',mobile:m,dob:d.dob||'',category:d.category||'',district:d.district||'',status:'Submitted',profile:d};
+   a[m]=x;put(a);return x},
+  login:(m,p)=>{let a=get(),x=a[(m||'').replace(/\D/g,'')];if(x&&x.password===String(p)){localStorage.setItem('biharTalentSession',x.mobile);return x}return null},
+  current:()=>{let m=localStorage.getItem('biharTalentSession');return m?get()[m]:null},
+  logout:()=>localStorage.removeItem('biharTalentSession')
+ };
+})();
+<script>let a=BiharTalent.current();if(!a)location.href='login.html';else{name.textContent='Welcome, '+a.name+' 👋';rid.textContent='Registration ID: '+a.registrationId;uid.textContent=a.userId;cat.textContent=a.category||'—';st.textContent=a.status||'Submitted';info.textContent='Your registration has been recorded. Keep your Registration ID safe.'}function logout(){BiharTalent.logout();location.href='login.html'}</script></body></html>

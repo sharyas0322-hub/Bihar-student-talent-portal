@@ -1,0 +1,131 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registration | Bihar Talent</title><style>
+:root{--ink:#101828;--muted:#667085;--line:#e4e7ec;--bg:#f6f8fb;--brand:#e85b2a;--navy:#0b1f3a;--white:#fff;--shadow:0 24px 70px rgba(16,24,40,.09)}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#fff}a{text-decoration:none;color:inherit}.nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,6vw);border-bottom:1px solid #edf0f4;background:#fff;position:sticky;top:0;z-index:20}.brand{display:flex;gap:10px;align-items:center;font-weight:700}.brand-mark{width:38px;height:38px;border-radius:11px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px}.login-link{font-size:14px;color:#475467}.form-page{background:linear-gradient(180deg,#f6f8fb,#fff);min-height:calc(100vh - 76px);padding:48px 18px}.form-shell{max-width:900px;margin:auto;background:#fff;border:1px solid var(--line);border-radius:24px;padding:34px;box-shadow:var(--shadow)}.form-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:800;color:var(--brand);margin-bottom:12px}.form-shell h1{font-size:36px;line-height:1.15;margin:0 0 8px}.muted{color:var(--muted);line-height:1.6}.secure-badge{font-size:12px;font-weight:700;background:#f5f7fa;padding:9px 12px;border-radius:99px;color:#475467;white-space:nowrap}.progress-label{display:flex;justify-content:space-between;color:#667085;font-size:12px;margin-top:30px}.progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 30px}.progress span{height:5px;background:#e9edf2;border-radius:10px}.progress span.active{background:var(--brand)}.form-step h2{font-size:23px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}label{display:block;font-weight:600;font-size:14px;margin-bottom:18px}input,select,textarea{width:100%;margin-top:8px;padding:14px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff}input:focus,select:focus,textarea:focus{outline:3px solid #e85b2a18;border-color:var(--brand)}.wide{grid-column:1/-1}.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;padding:14px 20px;border-radius:11px;border:1px solid transparent;font-weight:700;cursor:pointer;font-family:inherit}.primary{background:var(--navy);color:#fff}.ghost{background:#fff;border-color:#dfe3e8;color:var(--ink)}.full{width:100%;margin-top:8px}.row{display:flex;gap:12px;align-items:center}.hidden{display:none!important}.tip{padding:13px 15px;background:#f8fafc;border:1px solid #eef0f3;border-radius:11px;color:#667085;font-size:12px;line-height:1.5;margin:5px 0 18px}.optional{color:#98a2b3;font-weight:500;font-size:11px}.check{display:flex;gap:9px;align-items:flex-start;font-weight:500}.check input{width:auto;margin:2px 0}.preview{background:#f8fafc;border:1px solid var(--line);border-radius:13px;padding:10px 18px;margin:20px 0}.preview div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #e8ebef;gap:20px;font-size:14px}.preview div:last-child{border:0}.preview div span{color:#667085}.save-note{font-size:12px;color:#667085;margin:14px 0 0}.success{max-width:680px;margin:auto;text-align:center}.success-icon{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:#eaf7ef;color:#14804a;font-size:34px;margin:0 auto 18px}.success h2{font-size:32px;margin:0 0 10px}.cred{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin:24px 0}.cred div{border:1px solid var(--line);border-radius:13px;padding:16px;background:#fafbfc}.cred span{display:block;color:#667085;font-size:12px;margin-bottom:6px}.cred strong{font-size:18px}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}@media(max-width:700px){.form-shell{padding:22px;border-radius:18px}.form-head{display:block}.secure-badge{display:inline-block;margin-top:15px}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.cred{grid-template-columns:1fr}.row{flex-direction:column;align-items:stretch}.row .btn{width:100%}.nav{height:68px}.form-page{padding:24px 12px}.form-shell h1{font-size:29px}}
+</style></head><body><header class="nav"><a class="brand" href="index.html"><span class="brand-mark">BT</span><span><b>Bihar</b> Talent</span></a><a class="login-link" href="login.html">Already registered? <b>Login</b></a></header><main class="form-page"><div class="form-shell"><div class="form-head"><div><div class="eyebrow" id="typeEyebrow">REGISTRATION</div><h1 id="formTitle">Student Registration</h1><p class="muted">A simple 4-step application. Your details are saved on this device while you complete the form.</p></div><div class="secure-badge">🔒 Protected application</div></div><div class="progress-label"><span>Step <b id="stepNo">1</b> of 4</span><span id="progressHint">Student details</span></div><div class="progress"><span class="active"></span><span></span><span></span><span></span></div>
+<div id="step1" class="form-step"><h2>Student details</h2><div class="grid"><label>Full name *<input id="name" autocomplete="name" placeholder="Enter student's full name"></label><label>Date of birth *<input id="dob" type="date"></label><label>Gender *<select id="gender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></label><label>Mobile number *<input id="mobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number"></label><label>Parent / Guardian name *<input id="guardian" placeholder="Enter parent or guardian name"></label><label>Parent / Guardian mobile <span class="optional">Optional</span><input id="guardianMobile" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number"></label></div><div class="tip">💡 <b>Login details:</b> after successful registration, the student's mobile number becomes the User ID and the date of birth becomes the initial password.</div><button class="btn primary full" onclick="nextStep(1)">Save & Continue <span>→</span></button></div>
+<div id="step2" class="form-step hidden"><h2>School / college details</h2><div class="grid"><label>District *<select id="district"><option value="">Select district</option><option>Araria</option><option>Arwal</option><option>Aurangabad</option><option>Banka</option><option>Begusarai</option><option>Bhagalpur</option><option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option><option>East Champaran</option><option>Gaya</option><option>Gopalganj</option><option>Jamui</option><option>Jehanabad</option><option>Kaimur</option><option>Katihar</option><option>Khagaria</option><option>Kishanganj</option><option>Lakhisarai</option><option>Madhepura</option><option>Madhubani</option><option>Munger</option><option>Madhepura</option><option>Muzaffarpur</option><option>Nalanda</option><option>Nawada</option><option>Patna</option><option>Purnia</option><option>Rohtas</option><option>Saharsa</option><option>Samastipur</option><option>Saran</option><option>Sheikhpura</option><option>Sheohar</option><option>Sitamarhi</option><option>Siwan</option><option>Supaul</option><option>Vaishali</option><option>West Champaran</option></select></label><label>Block / City *<input id="block" placeholder="Enter block or city"></label><label class="wide">School / College name *
+<section class="form-section" id="student-identification">
+  <div class="section-heading">
+    <span class="section-kicker">Student Identification</span>
+    <h2>Aadhaar &amp; APAAR Details</h2>
+    <p>Enter these details only if applicable/required for your programme. They will be kept protected.</p>
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label for="aadhaar">Aadhaar Number <span class="optional">Optional</span></label>
+      <input id="aadhaar" name="aadhaar" type="text" inputmode="numeric"
+             maxlength="12" autocomplete="off"
+             placeholder="Enter 12-digit Aadhaar number">
+      <small class="field-note">12 digits only. Do not display the full number publicly.</small>
+    </div>
+
+    <div class="field">
+      <label for="apaar">APAAR ID <span class="optional">Optional</span></label>
+      <input id="apaar" name="apaar" type="text" inputmode="numeric"
+             maxlength="12" autocomplete="off"
+             placeholder="Enter 12-digit APAAR ID">
+      <small class="field-note">Enter your 12-digit APAAR ID, if available.</small>
+    </div>
+  </div>
+</section>
+
+<input id="school" placeholder="Enter your school or college"></label><label>Class / Course *<input id="className" placeholder="e.g. Class 10 / B.A. 1st Year"></label><label>School / College type<select id="institutionType"><option>School</option><option>College</option><option>University</option><option>Other</option></select></label></div><div class="row"><button class="btn ghost" onclick="showStep(1)">← Back</button><button class="btn primary" onclick="nextStep(2)">Save & Continue <span>→</span></button></div></div>
+<div id="step3" class="form-step hidden"><h2>Your talent</h2><div id="sportsFields"><div class="grid"><label>Select sport *<select id="sport"><option value="">Choose sport</option><option>Cricket</option><option>Football</option><option>Kabaddi</option><option>Volleyball</option><option>Basketball</option><option>Athletics</option><option>Badminton</option><option>Table Tennis</option><option>Chess</option><option>Hockey</option><option>Kho-Kho</option><option>Wrestling</option><option>Boxing</option><option>Archery</option><option>Swimming</option><option>Other</option></select></label><label>Participation level<select id="sportLevel"><option>School</option><option>Block</option><option>District</option><option>State</option><option>National</option><option>International</option></select></label></div></div><div id="culturalFields" class="hidden"><div class="grid"><label>Select cultural activity *<select id="cultural"><option value="">Choose activity</option><option>Dance</option><option>Singing</option><option>Instrumental Music</option><option>Drama / Theatre</option><option>Painting / Art</option><option>Poetry</option><option>Debate</option><option>Folk / Traditional Art</option><option>Storytelling</option><option>Other</option></select></label><label>Participation level<select id="culturalLevel"><option>School</option><option>Block</option><option>District</option><option>State</option><option>National</option></select></label></div></div><label>Achievements / experience <span class="optional">Optional</span><textarea id="achievement" rows="5" placeholder="Tell us briefly about participation, training, awards or achievements."></textarea></label><div class="tip">📌 Documents, certificates and performance videos can be added later when the secure online submission system is connected.</div><div class="row"><button class="btn ghost" onclick="showStep(2)">← Back</button><button class="btn primary" onclick="nextStep(3)">Review application <span>→</span></button></div></div>
+<div id="step4" class="form-step hidden"><h2>Review & submit</h2><p class="muted">Check every detail carefully before final submission.</p><div id="preview" class="preview"></div><label class="check"><input id="declaration" type="checkbox"> <span>I confirm that the information provided is correct and I agree to the programme rules.</span></label><p class="save-note">After submission, your Registration ID will be generated automatically. Keep it safe for future tracking.</p><div class="row"><button class="btn ghost" onclick="showStep(3)">← Edit</button><button class="btn primary" onclick="submitRegistration()">Submit registration ✓</button></div></div>
+<div id="success" class="form-step hidden success"><div class="success-icon">✓</div><h2>Registration successful</h2><p class="muted">Your student profile has been created successfully.</p><div class="cred"><div><span>Registration ID</span><strong id="successReg"></strong></div><div><span>User ID</span><strong id="successUser"></strong></div><div><span>Initial password</span><strong id="successPass"></strong></div><div><span>Category</span><strong id="successType"></strong></div></div><div class="actions"><a class="btn primary" href="dashboard.html">Go to Student Dashboard →</a><button class="btn ghost" onclick="window.print()">Print registration</button></div></div>
+</div></main><script>
+const params=new URLSearchParams(location.search);let type=(params.get('type')||localStorage.getItem('registrationType')||'sports').toLowerCase();let currentStep=1;const draftKey='biharTalentDraft_'+type;
+function setType(){const sports=type==='sports';document.getElementById('typeEyebrow').textContent=sports?'SPORTS REGISTRATION':'CULTURAL REGISTRATION';document.getElementById('formTitle').textContent=sports?'Sports Registration':'Cultural Registration';document.getElementById('sportsFields').classList.toggle('hidden',!sports);document.getElementById('culturalFields').classList.toggle('hidden',sports);localStorage.setItem('registrationType',type);restoreDraft();updateProgress(1)}
+function updateProgress(n){const hints=['Student details','School / college','Your talent','Review & submit'];document.getElementById('stepNo').textContent=n;document.getElementById('progressHint').textContent=hints[n-1];document.querySelectorAll('.progress span').forEach((x,i)=>x.classList.toggle('active',i<n))}
+function showStep(n){currentStep=n;for(let i=1;i<=4;i++)document.getElementById('step'+i)?.classList.toggle('hidden',i!==n);updateProgress(n);window.scrollTo({top:0,behavior:'smooth'});saveDraft()}
+function required(ids){for(const id of ids){const x=document.getElementById(id);if(!x.value.trim()){x.focus();alert('Please complete all required fields.');return false}}return true}
+function nextStep(n){if(n===1){if(!required(['name','dob','gender','mobile','guardian']))return;if(!/^\d{10}$/.test(document.getElementById('mobile').value))return alert('Please enter a valid 10-digit mobile number.');const gm=document.getElementById('guardianMobile').value.trim();if(gm&&!/^\d{10}$/.test(gm))return alert('Please enter a valid guardian mobile number.')}if(n===2&&!required(['district','block','school','className']))return;if(n===3){if((type==='sports'&&!required(['sport']))||(type==='cultural'&&!required(['cultural'])))return;buildPreview()}showStep(n+1)}
+function getData(){const activity=type==='sports'?document.getElementById('sport').value:document.getElementById('cultural').value;const level=type==='sports'?document.getElementById('sportLevel').value:document.getElementById('culturalLevel').value;return{name:document.getElementById('name').value.trim(),dob:document.getElementById('dob').value,gender:document.getElementById('gender').value,mobile:document.getElementById('mobile').value.trim(),guardian:document.getElementById('guardian').value.trim(),guardianMobile:document.getElementById('guardianMobile').value.trim(),district:document.getElementById('district').value,block:document.getElementById('block').value.trim(),school:document.getElementById('school').value.trim(),className:document.getElementById('className').value.trim(),institutionType:document.getElementById('institutionType').value,activity,level,achievement:document.getElementById('achievement').value.trim()}}
+function saveDraft(){try{localStorage.setItem(draftKey,JSON.stringify(getData()))}catch(e){}}
+function restoreDraft(){try{const d=JSON.parse(localStorage.getItem(draftKey)||'null');if(!d)return;Object.entries(d).forEach(([k,v])=>{const e=document.getElementById(k);if(e&&v!=null)e.value=v})}catch(e){}}
+function buildPreview(){const d=getData();const rows=[['Name',d.name],['Date of Birth',d.dob],['Gender',d.gender],['Mobile',d.mobile],['Parent / Guardian',d.guardian],['District',d.district],['Block / City',d.block],['School / College',d.school],['Class / Course',d.className],['Registration Type',type==='sports'?'Sports':'Cultural'],['Activity',d.activity],['Participation Level',d.level],['Achievements',d.achievement||'Not provided']];document.getElementById('preview').innerHTML=rows.map(r=>`<div><span>${escapeHtml(r[0])}</span><b>${escapeHtml(r[1])}</b></div>`).join('')}
+function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function formatDob(v){return v.split('-').reverse().join('')}
+function submitRegistration(){if(!document.getElementById('declaration').checked)return alert('Please accept the declaration.');const d=getData();const old=JSON.parse(localStorage.getItem('student_'+d.mobile)||'null');if(old)return alert('This mobile number is already registered. Please use Student Login.');const reg='BSTR26-'+String(Date.now()).slice(-6);const user={...d,type,reg,status:'Under Verification',createdAt:new Date().toISOString()};localStorage.setItem('student_'+d.mobile,JSON.stringify(user));localStorage.setItem('currentStudent',d.mobile);localStorage.removeItem(draftKey);document.querySelectorAll('.form-step').forEach(x=>x.classList.add('hidden'));document.getElementById('success').classList.remove('hidden');document.getElementById('successReg').textContent=reg;document.getElementById('successUser').textContent=d.mobile;document.getElementById('successPass').textContent=formatDob(d.dob);document.getElementById('successType').textContent=type==='sports'?'Sports':'Cultural';window.scrollTo({top:0,behavior:'smooth'})}
+if(document.getElementById('formTitle'))setType();
+</script>
+<script>
+(function () {
+  const aadhaar = document.getElementById('aadhaar');
+  const apaar = document.getElementById('apaar');
+
+  function digitsOnly(el) {
+    if (!el) return;
+    el.value = el.value.replace(/\D/g, '').slice(0, 12);
+  }
+
+  [aadhaar, apaar].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', () => digitsOnly(el));
+  });
+
+  const form = (aadhaar || apaar)?.closest('form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      digitsOnly(aadhaar);
+      digitsOnly(apaar);
+
+      const a = aadhaar?.value || '';
+      const p = apaar?.value || '';
+
+      if (a && a.length !== 12) {
+        e.preventDefault();
+        alert('Aadhaar Number must contain exactly 12 digits.');
+        aadhaar.focus();
+        return;
+      }
+      if (p && p.length !== 12) {
+        e.preventDefault();
+        alert('APAAR ID must contain exactly 12 digits.');
+        apaar.focus();
+      }
+    }, true);
+  }
+})();
+</script>
+
+
+<script>
+window.BiharTalent=(()=>{
+ const K='biharTalentAccounts';
+ const get=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}};
+ const put=x=>localStorage.setItem(K,JSON.stringify(x));
+ return {
+  create:d=>{let a=get(),m=(d.mobile||'').replace(/\D/g,''),dob=(d.dob||'').replace(/\D/g,'');
+   if(!m||!dob)return null;if(a[m])return a[m];
+   let x={userId:m,password:dob,registrationId:'BSTR26-'+Math.floor(100000+Math.random()*900000),name:d.name||'Student',mobile:m,dob:d.dob||'',category:d.category||'',district:d.district||'',status:'Submitted',profile:d};
+   a[m]=x;put(a);return x},
+  login:(m,p)=>{let a=get(),x=a[(m||'').replace(/\D/g,'')];if(x&&x.password===String(p)){localStorage.setItem('biharTalentSession',x.mobile);return x}return null},
+  current:()=>{let m=localStorage.getItem('biharTalentSession');return m?get()[m]:null},
+  logout:()=>localStorage.removeItem('biharTalentSession')
+ };
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const f=document.querySelector('form'); if(!f)return;
+ f.addEventListener('submit',()=>{
+  const q=n=>{let e=document.querySelector('[name="'+n+'"],#'+n);return e?e.value.trim():''};
+  BiharTalent.create({name:q('name')||q('studentName'),mobile:q('mobile')||q('phone')||q('mobileNumber'),dob:q('dob')||q('dateOfBirth'),category:new URLSearchParams(location.search).get('category')||q('category'),district:q('district')});
+ },true);
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const districts = ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran (Motihari)', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur (Bhabua)', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran (Bettiah)'];
+  const selects = Array.from(document.querySelectorAll('select')).filter(s =>
+    /district/i.test((s.name||'')+' '+(s.id||'')+' '+(s.innerText||''))
+  );
+  selects.forEach(sel=>{
+    const current=sel.value;
+    sel.innerHTML='<option value="">Select District</option>'+districts.map(d=>'<option value="'+d.replace(/"/g,'&quot;')+'">'+d+'</option>').join('');
+    if(current) sel.value=current;
+  });
+});
+</script>
+</body></html>
