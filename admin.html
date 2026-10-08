@@ -49,60 +49,30 @@
 
 <div class="modal" id="modal"><div class="card"><button class="close" onclick="closeModal()">Close</button><h2>Application Details</h2><div id="details"></div></div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const KEY='biharTalentAccounts';
-const get=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
-let all=[];
+const SUPABASE_URL='https://mxrwqbygssjgzztlhmei.supabase.co';
+const SUPABASE_KEY='sb_publishable_3dRCLnMjk1tJGKLpDaq5Og_sPRb5QNU';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const BIHAR_DISTRICTS=['Araria','Arwal','Aurangabad','Banka','Begusarai','Bhagalpur','Bhojpur','Buxar','Darbhanga','East Champaran (Motihari)','Gaya','Gopalganj','Jamui','Jehanabad','Kaimur (Bhabua)','Katihar','Khagaria','Kishanganj','Lakhisarai','Madhepura','Madhubani','Munger','Muzaffarpur','Nalanda','Nawada','Patna','Purnia','Rohtas','Saharsa','Samastipur','Saran','Sheikhpura','Sheohar','Sitamarhi','Siwan','Supaul','Vaishali','West Champaran (Bettiah)'];
+let all=[],current=[];
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-
-const BIHAR_DISTRICTS=['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran (Motihari)', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur (Bhabua)', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran (Bettiah)'];
-function load(){
- all=Object.values(get());
- const ds=BIHAR_DISTRICTS;
- const acts=[...new Set(all.map(x=>(x.profile&& (x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||x.category).filter(Boolean))].sort();
- district.innerHTML='<option value="">All Districts</option>'+ds.map(x=>`<option>${esc(x)}</option>`).join('');
- activity.innerHTML='<option value="">All Activities</option>'+acts.map(x=>`<option>${esc(x)}</option>`).join('');
+function init(){district.innerHTML='<option value="">All Districts</option>'+BIHAR_DISTRICTS.map(x=>'<option>'+esc(x)+'</option>').join('');}
+async function load(){
+ const {data,error}=await sb.from('registrations').select('registration_id,programme_type,student_name,mobile,email,dob,gender,category,student_id,district,block,school_name,class_name,activity,activity_details,guardian_name,guardian_mobile,institution_type,participation_level,status,created_at,updated_at').order('created_at',{ascending:false});
+ if(error){alert('Unable to load registrations: '+error.message);return}
+ all=(data||[]).map(x=>({...x,name:x.student_name,registrationId:x.registration_id,category:x.programme_type||x.category,status:x.status||'Pending',createdAt:x.created_at}));
+ activity.innerHTML='<option value="">All Activities</option>'+[...new Set(all.map(x=>x.activity).filter(Boolean))].sort().map(x=>'<option>'+esc(x)+'</option>').join('');
  render();
 }
-function filtered(){
- const d=district.value,a=activity.value,c=category.value,s=status.value,q=search.value.toLowerCase().trim();
- return all.filter(x=>{
-  const act=(x.profile&&(x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||'';
-  return (!d||x.district===d)&&(!a||act===a)&&(!c||x.category===c)&&(!s||x.status===s)&&(!q||[x.name,x.mobile,x.registrationId].some(v=>String(v||'').toLowerCase().includes(q)));
- });
-}
-function render(){
- const f=filtered();
- total.textContent=all.length;sports.textContent=all.filter(x=>x.category==='Sports').length;cultural.textContent=all.filter(x=>x.category==='Cultural').length;pending.textContent=all.filter(x=>(x.status||'Submitted')==='Submitted').length;
- rows.innerHTML=f.length?f.map((x,i)=>{
-  const act=(x.profile&&(x.profile.sport||x.profile.activity||x.profile.culturalCategory))||x.activity||'—';
-  const st=x.status||'Submitted'; const cls=st==='Approved'?'approved':st==='Rejected'?'rejected':'pending';
-  return `<tr><td>${esc(x.registrationId)}</td><td>${esc(x.name)}</td><td>${esc(x.mobile)}</td><td>${esc(x.district||'—')}</td><td>${esc(x.category||'—')}</td><td>${esc(act)}</td><td><span class="pill ${cls}">${esc(st)}</span></td><td><button class="btn light" onclick="view(${i})">View</button></td></tr>`;
- }).join(''):'<tr><td colspan="8">No applications found.</td></tr>';
- window.current=f;
-}
-function view(i){
- const x=window.current[i]; const p=x.profile||{};
- details.innerHTML=`<p><b>Registration ID:</b> ${esc(x.registrationId)}</p>
- <p><b>Name:</b> ${esc(x.name)}</p><p><b>Mobile:</b> ${esc(x.mobile)}</p><p><b>DOB:</b> ${esc(x.dob)}</p>
- <p><b>District:</b> ${esc(x.district||p.district)}</p><p><b>Category:</b> ${esc(x.category)}</p>
- <p><b>Aadhaar:</b> ${p.aadhaar?'••••••••'+String(p.aadhaar).slice(-4):'Not provided'}</p>
- <p><b>APAAR:</b> ${p.apaar?'••••••••'+String(p.apaar).slice(-4):'Not provided'}</p>
- <hr><button class="btn primary" onclick="setStatus('${esc(x.mobile)}','Approved')">Approve</button>
- <button class="btn light" onclick="setStatus('${esc(x.mobile)}','Correction Required')">Correction Required</button>
- <button class="btn" style="background:#ffe9e9;color:#a42222" onclick="setStatus('${esc(x.mobile)}','Rejected')">Reject</button>`;
- modal.style.display='flex';
-}
-function setStatus(m,st){const a=get();if(a[m]){a[m].status=st;localStorage.setItem(KEY,JSON.stringify(a));load();closeModal();}}
+function filtered(){const d=district.value,a=activity.value,c=category.value,s=status.value,q=search.value.toLowerCase().trim();return all.filter(x=>(!d||x.district===d)&&(!a||x.activity===a)&&(!c||x.category===c)&&(!s||x.status===s)&&(!q||[x.name,x.mobile,x.registrationId].some(v=>String(v||'').toLowerCase().includes(q))));}
+function render(){const f=filtered();current=f;total.textContent=all.length;sports.textContent=all.filter(x=>x.category==='Sports').length;cultural.textContent=all.filter(x=>x.category==='Cultural').length;pending.textContent=all.filter(x=>x.status==='Pending').length;rows.innerHTML=f.length?f.map((x,i)=>'<tr><td>'+esc(x.registrationId)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.mobile)+'</td><td>'+esc(x.district||'—')+'</td><td>'+esc(x.category||'—')+'</td><td>'+esc(x.activity||'—')+'</td><td><span class="pill '+(x.status==='Approved'?'approved':x.status==='Rejected'?'rejected':'pending')+'">'+esc(x.status)+'</span></td><td><button class="btn light" onclick="view('+i+')">View</button></td></tr>').join(''):'<tr><td colspan="8">No applications found.</td></tr>';}
+function view(i){const x=current[i];details.innerHTML='<p><b>Registration ID:</b> '+esc(x.registrationId)+'</p><p><b>Name:</b> '+esc(x.name)+'</p><p><b>Mobile:</b> '+esc(x.mobile)+'</p><p><b>DOB:</b> '+esc(x.dob)+'</p><p><b>Gender:</b> '+esc(x.gender)+'</p><p><b>District:</b> '+esc(x.district)+'</p><p><b>Block:</b> '+esc(x.block)+'</p><p><b>School:</b> '+esc(x.school_name)+'</p><p><b>Category:</b> '+esc(x.category)+'</p><p><b>Activity:</b> '+esc(x.activity)+'</p><p><b>Status:</b> '+esc(x.status)+'</p><hr><button class="btn primary" onclick="setStatus(\''+esc(x.registrationId)+'\',\'Approved\')">Approve</button> <button class="btn light" onclick="setStatus(\''+esc(x.registrationId)+'\',\'Correction Required\')">Correction Required</button> <button class="btn" style="background:#ffe9e9;color:#a42222" onclick="setStatus(\''+esc(x.registrationId)+'\',\'Rejected\')">Reject</button>';modal.style.display='flex';}
+async function setStatus(id,st){const {error}=await sb.from('registrations').update({status:st,updated_at:new Date().toISOString()}).eq('registration_id',id);if(error){alert('Update failed: '+error.message);return}closeModal();await load();}
 function closeModal(){modal.style.display='none'}
 function resetFilters(){district.value='';activity.value='';category.value='';status.value='';search.value='';render()}
-function downloadExcel(){
- const f=filtered(); if(!f.length){alert('No filtered applications to export.');return}
- const headers=['Registration ID','Name','Mobile','DOB','District','Category','Activity','Status','Registration Date'];
- const lines=[headers,...f.map(x=>{const p=x.profile||{};return[x.registrationId,x.name,x.mobile,x.dob,x.district,x.category,(p.sport||p.activity||p.culturalCategory||''),x.status||'Submitted',x.createdAt||'']})];
- const csv=lines.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');
- const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bihar-student-registrations.csv';a.click();URL.revokeObjectURL(a.href);
-}
-load();
+function downloadExcel(){const f=filtered();if(!f.length){alert('No filtered applications to export.');return}const h=['Registration ID','Name','Mobile','DOB','District','Block','School','Category','Activity','Status','Registration Date'];const lines=[h,...f.map(x=>[x.registrationId,x.name,x.mobile,x.dob,x.district,x.block,x.school_name,x.category,x.activity,x.status,x.createdAt])];const csv=lines.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bihar-student-registrations.csv';a.click();URL.revokeObjectURL(a.href);}
+async function boot(){const {data:{session}}=await sb.auth.getSession();if(!session){location.href='login.html';return}init();await load();}
+boot();
 </script>
 </body></html>
