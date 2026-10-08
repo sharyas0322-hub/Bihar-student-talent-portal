@@ -46,7 +46,38 @@ function restoreDraft(){try{const d=JSON.parse(localStorage.getItem(draftKey)||'
 function buildPreview(){const d=getData();const rows=[['Name',d.name],['Date of Birth',d.dob],['Gender',d.gender],['Mobile',d.mobile],['Parent / Guardian',d.guardian],['District',d.district],['Block / City',d.block],['School / College',d.school],['Class / Course',d.className],['Registration Type',type==='sports'?'Sports':'Cultural'],['Activity',d.activity],['Participation Level',d.level],['Achievements',d.achievement||'Not provided']];document.getElementById('preview').innerHTML=rows.map(r=>`<div><span>${escapeHtml(r[0])}</span><b>${escapeHtml(r[1])}</b></div>`).join('')}
 function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function formatDob(v){return v.split('-').reverse().join('')}
-function submitRegistration(){if(!document.getElementById('declaration').checked)return alert('Please accept the declaration.');const d=getData();const old=JSON.parse(localStorage.getItem('student_'+d.mobile)||'null');if(old)return alert('This mobile number is already registered. Please use Student Login.');const reg='BSTR26-'+String(Date.now()).slice(-6);const user={...d,type,reg,status:'Under Verification',createdAt:new Date().toISOString()};localStorage.setItem('student_'+d.mobile,JSON.stringify(user));localStorage.setItem('currentStudent',d.mobile);localStorage.removeItem(draftKey);document.querySelectorAll('.form-step').forEach(x=>x.classList.add('hidden'));document.getElementById('success').classList.remove('hidden');document.getElementById('successReg').textContent=reg;document.getElementById('successUser').textContent=d.mobile;document.getElementById('successPass').textContent=formatDob(d.dob);document.getElementById('successType').textContent=type==='sports'?'Sports':'Cultural';window.scrollTo({top:0,behavior:'smooth'})}
+async function submitRegistration(){
+  if(!document.getElementById('declaration').checked)return alert('Please accept the declaration.');
+  const d=getData();
+  const btn=document.querySelector('#step4 .primary');
+  if(btn){btn.disabled=true;btn.textContent='Submitting…';}
+  try{
+    const res=await fetch('https://mxrwqbygssjgzztlhmei.supabase.co/functions/v1/submit-registration',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':'sb_publishable_3dRCLnMjk1tJGKLpDaq5Og_sPRb5QNU'
+      },
+      body:JSON.stringify({data:{...d,type}})
+    });
+    const out=await res.json();
+    if(!res.ok) throw new Error(out.error||'Registration failed');
+    const user={...d,type,registrationId:out.registration_id,status:out.status||'Pending',createdAt:out.created_at};
+    localStorage.setItem('currentStudentProfile',JSON.stringify(user));
+    localStorage.setItem('currentStudent',d.mobile);
+    localStorage.removeItem(draftKey);
+    document.querySelectorAll('.form-step').forEach(x=>x.classList.add('hidden'));
+    document.getElementById('success').classList.remove('hidden');
+    document.getElementById('successReg').textContent=out.registration_id||'—';
+    document.getElementById('successUser').textContent=d.mobile;
+    document.getElementById('successPass').textContent=formatDob(d.dob);
+    document.getElementById('successType').textContent=type==='sports'?'Sports':'Cultural';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){
+    alert(e.message||'Registration failed. Please try again.');
+    if(btn){btn.disabled=false;btn.textContent='Submit registration ✓';}
+  }
+}
 if(document.getElementById('formTitle'))setType();
 </script>
 <script>
