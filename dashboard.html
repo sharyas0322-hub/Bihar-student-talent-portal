@@ -87,7 +87,33 @@
 I hereby declare that the information furnished in this application is true and correct to the best of my knowledge. I understand that the registration is subject to verification by the authorised programme authority and that any incorrect information may result in cancellation of the application.</div>
 <div class="official-foot"><span>Generated from Bihar Student Talent Portal</span><span>Keep this form safely for future reference.</span></div>
 </div></section>
-</main><script>
-const a=JSON.parse(localStorage.getItem('currentStudentProfile')||'null');if(!a)location.href='login.html';else{document.getElementById('name').textContent='Welcome, '+(a.name||'Student')+' 👋';document.getElementById('rid').textContent='Registration ID: '+(a.registrationId||'—');document.getElementById('uid').textContent=a.mobile||'—';document.getElementById('cat').textContent=a.type==='cultural'?'Cultural':(a.category||'Sports');document.getElementById('activity').textContent=a.activity||'—';document.getElementById('st').textContent=a.status||'Pending';document.getElementById('info').textContent='District: '+(a.district||'—')+' | School/College: '+(a.school||'—')+' | Activity: '+(a.activity||'—');fillSlip();});
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const SUPABASE_URL='https://mxrwqbygssjgzztlhmei.supabase.co',SUPABASE_KEY='sb_publishable_3dRCLnMjk1tJGKLpDaq5Og_sPRb5QNU';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let a=JSON.parse(localStorage.getItem('currentStudentProfile')||'null');
+async function initDashboard(){
+ if(!a){location.href='login.html';return}
+ const {data,error}=await db.from('registrations').select('*').eq('registration_id',a.registrationId).maybeSingle();
+ if(data){
+  a={...a,registrationId:data.registration_id,name:data.student_name,mobile:data.mobile,email:data.email,dob:data.dob,gender:data.gender,
+  category:data.programme_type,categoryName:data.category_name,studentId:data.student_id,district:data.district,block:data.block,
+  school:data.school_name,className:data.class_name,activity:data.activity,achievement:data.activity_details,status:data.status,createdAt:data.created_at,
+  fatherName:data.father_name,motherName:data.mother_name,address:data.address,locality:data.locality,nationality:data.nationality,
+  courseName:data.course_name,academicYear:data.academic_year,collegeRollNo:data.college_roll_no,
+  universityRegistrationNo:data.university_registration_no,universityRollNo:data.university_roll_no,institutionType:data.institution_type,
+  level:data.participation_level,photoData:data.photo_data,signatureData:data.signature_data,aadhaar:data.aadhaar_last4};
+  a.type=(data.programme_type||'Sports').toLowerCase();
+  localStorage.setItem('currentStudentProfile',JSON.stringify(a));
+ }
+ document.getElementById('name').textContent='Welcome, '+(a.name||'Student')+' 👋';
+ document.getElementById('rid').textContent='Registration ID: '+(a.registrationId||'—');
+ document.getElementById('uid').textContent=a.mobile||'—';
+ document.getElementById('cat').textContent=a.type==='cultural'?'Cultural':'Sports';
+ document.getElementById('activity').textContent=a.activity||'—';
+ document.getElementById('st').textContent=a.status||'Pending';
+ document.getElementById('info').textContent='District: '+(a.district||'—')+' | School/College: '+(a.school||'—')+' | Activity: '+(a.activity||'—');
+ fillSlip();
+}
+initDashboard();
 function fillSlip(){const q=(id,v)=>document.getElementById(id).textContent=v??'—';const safeA=(a.aadhaar||'').replace(/\D/g,'');const masked=safeA.length>=4?'XXXX XXXX '+safeA.slice(-4):'XXXX XXXX XXXX';q('sRid',a.registrationId);q('sDate',a.createdAt?new Date(a.createdAt).toLocaleDateString('en-IN'):'—');q('sName',a.name);q('sFather',a.fatherName);q('sMother',a.motherName);q('sDob',a.dob);q('sGender',a.gender);q('sCategory',a.categoryName||a.category);q('sStudentId',a.studentId);q('sAadhaar',masked);q('sNationality',a.nationality||'Indian');q('sAddress',a.address);q('sDistrict',a.district);q('sBlock',a.block);q('sMobile',a.mobile);q('sEmail',a.email);q('sLocality',a.locality);q('sSchool',a.school);q('sClass',a.className||a.courseName);q('sAcademicYear',a.academicYear);q('sCollegeRoll',a.collegeRollNo);q('sUniversityReg',a.universityRegistrationNo);q('sUniversityRoll',a.universityRollNo);q('sInstitution',a.institutionType);const cultural=a.type==='cultural';q('sProgramme',cultural?'Cultural':'Sports');q('sActivity',a.activity);q('sLevel',a.level);q('sStatus',a.status||'Pending');q('sAchievement',a.achievement||'Not provided');const slip=document.getElementById('officialSlip');slip.classList.toggle('sports-official',!cultural);slip.classList.toggle('cultural-official',cultural);document.getElementById('printTitle').textContent=cultural?'CULTURAL REGISTRATION FORM':'SPORTS REGISTRATION FORM';document.getElementById('printBadge').textContent=cultural?'🎭 CULTURAL PARTICIPATION':'🏅 SPORTS PARTICIPATION';if(a.photoData)document.getElementById('sPhoto').src=a.photoData;if(a.signatureData)document.getElementById('sSign').src=a.signatureData;}function showSlip(){document.getElementById('slipSection').scrollIntoView({behavior:'smooth'})}function printSlip(){window.print()}function logout(){localStorage.removeItem('currentStudentProfile');localStorage.removeItem('currentStudent');location.href='login.html'}
 </script></body></html>
