@@ -72,7 +72,7 @@ async function setStatus(id,st){const {error}=await sb.from('registrations').upd
 function closeModal(){modal.style.display='none'}
 function resetFilters(){district.value='';activity.value='';category.value='';status.value='';search.value='';render()}
 function downloadExcel(){const f=filtered();if(!f.length){alert('No filtered applications to export.');return}const h=['Registration ID','Name','Mobile','DOB','District','Block','School','Category','Activity','Status','Registration Date'];const lines=[h,...f.map(x=>[x.registrationId,x.name,x.mobile,x.dob,x.district,x.block,x.school_name,x.category,x.activity,x.status,x.createdAt])];const csv=lines.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bihar-student-registrations.csv';a.click();URL.revokeObjectURL(a.href);}
-async function boot(){const {data:{session}}=await sb.auth.getSession();if(!session){location.href='login.html';return}init();await load();}
+async function boot(){const {data:{session}}=await sb.auth.getSession();if(!session){location.href='admin-login.html';return}init();await load();}
 boot();
 </script>
 </body></html>
