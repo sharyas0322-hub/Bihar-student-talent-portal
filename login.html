@@ -9,8 +9,8 @@ async function go(){
   const mobile=u.value.trim();
   const dob=p.value.trim();
   err.style.display='none';
-  if(!/^\\d{10}$/.test(mobile)){err.textContent='Please enter a valid 10-digit mobile number.';err.style.display='block';return}
-  if(!/^\\d{2}\\d{2}\\d{4}$/.test(dob)){err.textContent='Please enter DOB as DDMMYYYY.';err.style.display='block';return}
+  if(!/^\d{10}$/.test(mobile)){err.textContent='Please enter a valid 10-digit mobile number.';err.style.display='block';return}
+  if(!/^\d{2}\d{2}\d{4}$/.test(dob)){err.textContent='Please enter DOB as DDMMYYYY.';err.style.display='block';return}
   const iso=dob.slice(4,8)+'-'+dob.slice(2,4)+'-'+dob.slice(0,2);
   try{
     const res=await fetch(SUPABASE_URL+'/functions/v1/student-login',{
