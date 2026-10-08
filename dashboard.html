@@ -1,13 +1,93 @@
 <!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Student Dashboard | Bihar Student Talent Portal</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#16263d;font-family:Arial,sans-serif}.nav{height:70px;background:#fff;border-bottom:1px solid #e2e8f0;padding:0 5%;display:flex;align-items:center;font-weight:800;color:#12457e}.nav button{margin-left:auto;border:1px solid #ccd7e5;background:#fff;border-radius:9px;padding:9px 14px;cursor:pointer}.wrap{max-width:1180px;margin:28px auto;padding:0 18px}.hero{background:linear-gradient(120deg,#0d4e9e,#176fd0);color:#fff;border-radius:20px;padding:28px}.hero h1{margin:8px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.card{background:#fff;border:1px solid #e1e8f1;border-radius:15px;padding:19px}.lab{font-size:11px;color:#728097;text-transform:uppercase;font-weight:800}.val{font-size:19px;font-weight:800;margin-top:8px}.status{display:inline-block;margin-top:7px;padding:7px 11px;border-radius:20px;background:#fff2d5;color:#805700;font-size:13px}.section{margin-top:18px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:#1263c6;color:#fff}.light{background:#edf4fd;color:#1263c6}.slip{background:#fff;border:1px solid #222;padding:28px;margin-top:20px}.slip h2{text-align:center;margin:0 0 18px}.slip table{width:100%;border-collapse:collapse}.slip td{border:1px solid #333;padding:9px}.slip td:first-child{font-weight:700;width:28%;background:#f7f7f7}.photo{width:110px;height:135px;object-fit:cover;border:1px solid #333}.sign{width:180px;height:65px;object-fit:contain;border:1px solid #333}.no-print{display:block}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.grid{grid-template-columns:1fr}.nav{padding:0 15px}}
 @media print{body{background:#fff}.no-print,.nav{display:none!important}.wrap{margin:0;padding:0;max-width:none}.hero,.grid,.section:not(#slipSection){display:none!important}.slip{border:0;margin:0;padding:10px}.slip table{font-size:12px}}
-</style></head><body><div class="nav no-print">Bihar Student Talent Portal <span style="margin-left:10px;font-size:12px;background:#edf4fd;padding:6px 9px;border-radius:20px">STUDENT PANEL</span><button onclick="logout()">Logout</button></div><main class="wrap">
+<style id="official-print-style">
+:root{--paper:#fff;--ink:#111827;--line:#202020}
+.official-slip{width:210mm;min-height:297mm;background:#fff;margin:22px auto;padding:10mm;border:1px solid #bbb;color:#111;font-family:Georgia,"Times New Roman",serif}
+.official-head{text-align:center;border:2px solid #111;padding:11px 12px 8px}
+.official-head .state{font-size:14px;font-weight:700;letter-spacing:.8px}
+.official-head h1{font-size:22px;margin:4px 0;text-transform:uppercase}
+.official-head .sub{font-size:12px;font-weight:700}
+.official-badge{display:inline-block;margin-top:7px;padding:4px 10px;border:1px solid #111;border-radius:3px;font:bold 11px Arial}
+.official-section{margin-top:7px;border:2px solid #111}
+.official-section-title{font-weight:700;background:#f1f1f1;padding:6px 8px;border-bottom:1px solid #111;font-size:13px}
+.official-table{width:100%;border-collapse:collapse;font-size:12px}
+.official-table td{border:1px solid #222;padding:7px 8px;vertical-align:top;height:29px}
+.official-table .label{font-weight:700;width:22%;background:#fafafa}
+.official-table .label2{font-weight:700;width:18%;background:#fafafa}
+.official-photo-cell{width:27%;text-align:center;vertical-align:middle!important}
+.official-photo{width:115px;height:140px;object-fit:cover;border:1px solid #222;background:#f5f5f5}
+.official-sign{max-width:190px;height:58px;object-fit:contain;border:1px solid #222;background:#fff;margin-top:4px}
+.official-declaration{border:2px solid #111;margin-top:8px;padding:9px;font-size:11px;line-height:1.45}
+.official-foot{display:flex;justify-content:space-between;gap:20px;margin-top:24px;font-size:10px}
+.sports-official .official-head{border-top:6px solid #145fc2}
+.sports-official .official-badge{color:#145fc2}
+.cultural-official .official-head{border-top:6px solid #a62d67}
+.cultural-official .official-badge{color:#a62d67}
+@media print{
+ @page{size:A4;margin:7mm}
+ body{background:#fff!important}
+ .no-print,.nav{display:none!important}
+ .wrap{margin:0!important;padding:0!important;max-width:none!important}
+ #slipSection{display:block!important;margin:0!important}
+ .official-slip{width:auto;min-height:0;margin:0;padding:0;border:0;page-break-inside:avoid}
+ .official-section,.official-declaration{page-break-inside:avoid}
+ .official-table{font-size:11px}
+ .official-table td{padding:6px}
+}
+</style></style></head><body><div class="nav no-print">Bihar Student Talent Portal <span style="margin-left:10px;font-size:12px;background:#edf4fd;padding:6px 9px;border-radius:20px">STUDENT PANEL</span><button onclick="logout()">Logout</button></div><main class="wrap">
 <section class="hero no-print"><div>Student Dashboard</div><h1 id="name">Welcome</h1><div id="rid"></div></section>
 <section class="grid no-print"><div class="card"><div class="lab">User ID</div><div class="val" id="uid"></div></div><div class="card"><div class="lab">Registration Type</div><div class="val" id="cat"></div></div><div class="card"><div class="lab">Activity</div><div class="val" id="activity"></div></div><div class="card"><div class="lab">Status</div><div class="val"><span class="status" id="st"></span></div></div></section>
 <section class="card section no-print"><h3>My Application</h3><p id="info"></p><div class="actions"><button class="btn primary" onclick="showSlip()">View Final Form</button><button class="btn light" onclick="printSlip()">Print / Save PDF</button></div></section>
-<section id="slipSection" class="section"><div class="slip"><h2>BIHAR STUDENT TALENT PORTAL<br><span style="font-size:14px">Student Registration Form</span></h2><table><tr><td>Registration ID</td><td id="sRid"></td><td rowspan="3" style="width:140px;text-align:center"><img id="sPhoto" class="photo" alt="Student Photo"></td></tr><tr><td>Applicant Name</td><td id="sName"></td></tr><tr><td>Registration Type</td><td id="sCat"></td></tr><tr><td>Date of Birth</td><td id="sDob"></td><td rowspan="2" style="text-align:center">Signature<br><img id="sSign" class="sign" alt="Signature"></td></tr><tr><td>Gender</td><td id="sGender"></td></tr><tr><td>Mobile / User ID</td><td colspan="2" id="sMobile"></td></tr><tr><td>Parent / Guardian</td><td colspan="2" id="sGuardian"></td></tr><tr><td>District</td><td colspan="2" id="sDistrict"></td></tr><tr><td>Block / City</td><td colspan="2" id="sBlock"></td></tr><tr><td>School / College</td><td colspan="2" id="sSchool"></td></tr><tr><td>Class / Course</td><td colspan="2" id="sClass"></td></tr><tr><td>Activity</td><td colspan="2" id="sActivity"></td></tr><tr><td>Participation Level</td><td colspan="2" id="sLevel"></td></tr><tr><td>Status</td><td colspan="2" id="sStatus"></td></tr></table><div style="border:1px solid #333;padding:12px;margin-top:15px;font-size:11px"><b>Declaration:</b> I confirm that the information provided in this registration is true and correct. The application is subject to verification by the programme authority.</div><p style="font-size:10px;margin-top:15px">Generated from Bihar Student Talent Portal · Keep this form for your records.</p></div></section>
+<section id="slipSection" class="section"><div id="officialSlip" class="official-slip">
+<div class="official-head">
+ <div class="state">BIHAR STUDENT TALENT PORTAL</div>
+ <h1 id="printTitle">STUDENT REGISTRATION FORM</h1>
+ <div class="sub">Official Registration / Application Record</div>
+ <span id="printBadge" class="official-badge">SPORTS PARTICIPATION</span>
+</div>
+<div class="official-section"><div class="official-section-title">Basic Details</div>
+<table class="official-table"><tr>
+<td class="label">Registration ID</td><td id="sRid"></td>
+<td class="label2">Registration Date</td><td id="sDate"></td>
+<td rowspan="4" class="official-photo-cell"><div style="font-weight:700;margin-bottom:6px">Student Photo</div><img id="sPhoto" class="official-photo" alt="Student Photo"></td>
+</tr>
+<tr><td class="label">Applicant's Name</td><td id="sName" colspan="3"></td></tr>
+<tr><td class="label">Father's Name</td><td id="sFather" colspan="3"></td></tr>
+<tr><td class="label">Mother's Name</td><td id="sMother" colspan="3"></td></tr>
+</table></div>
+
+<div class="official-section"><div class="official-section-title">Personal Details</div>
+<table class="official-table"><tr>
+<td class="label">Date of Birth</td><td id="sDob"></td><td class="label2">Gender</td><td id="sGender"></td>
+</tr><tr>
+<td class="label">Category</td><td id="sCategory"></td><td class="label2">Student ID</td><td id="sStudentId"></td>
+</tr><tr>
+<td class="label">Aadhaar</td><td id="sAadhaar"></td><td class="label2">Nationality</td><td id="sNationality"></td>
+</tr></table></div>
+
+<div class="official-section"><div class="official-section-title">Details for Correspondence</div>
+<table class="official-table"><tr><td class="label">Complete Address</td><td id="sAddress" colspan="3"></td></tr>
+<tr><td class="label">District</td><td id="sDistrict"></td><td class="label2">Block / City</td><td id="sBlock"></td></tr>
+<tr><td class="label">Contact No.</td><td id="sMobile"></td><td class="label2">E-mail ID</td><td id="sEmail"></td></tr>
+<tr><td class="label">Locality</td><td id="sLocality"></td><td class="label2">School / College</td><td id="sSchool"></td></tr></table></div>
+
+<div class="official-section"><div class="official-section-title">Academic / Programme Details</div>
+<table class="official-table"><tr><td class="label">Course / Class</td><td id="sClass"></td><td class="label2">Academic Year</td><td id="sAcademicYear"></td></tr>
+<tr><td class="label">College Roll No.</td><td id="sCollegeRoll"></td><td class="label2">University Registration No.</td><td id="sUniversityReg"></td></tr>
+<tr><td class="label">University Roll No.</td><td id="sUniversityRoll"></td><td class="label2">Institution Type</td><td id="sInstitution"></td></tr></table></div>
+
+<div class="official-section"><div class="official-section-title">Talent / Participation Details</div>
+<table class="official-table"><tr><td class="label">Programme</td><td id="sProgramme"></td><td class="label2">Activity</td><td id="sActivity"></td></tr>
+<tr><td class="label">Participation Level</td><td id="sLevel"></td><td class="label2">Application Status</td><td id="sStatus"></td></tr>
+<tr><td class="label">Achievements / Experience</td><td id="sAchievement" colspan="3"></td></tr>
+<tr><td class="label">Student Signature</td><td colspan="3"><img id="sSign" class="official-sign" alt="Signature"></td></tr></table></div>
+
+<div class="official-declaration"><b>Declaration:-</b><br>
+I hereby declare that the information furnished in this application is true and correct to the best of my knowledge. I understand that the registration is subject to verification by the authorised programme authority and that any incorrect information may result in cancellation of the application.</div>
+<div class="official-foot"><span>Generated from Bihar Student Talent Portal</span><span>Keep this form safely for future reference.</span></div>
+</div></section>
 </main><script>
 const a=JSON.parse(localStorage.getItem('currentStudentProfile')||'null');if(!a)location.href='login.html';else{document.getElementById('name').textContent='Welcome, '+(a.name||'Student')+' 👋';document.getElementById('rid').textContent='Registration ID: '+(a.registrationId||'—');document.getElementById('uid').textContent=a.mobile||'—';document.getElementById('cat').textContent=a.type==='cultural'?'Cultural':(a.category||'Sports');document.getElementById('activity').textContent=a.activity||'—';document.getElementById('st').textContent=a.status||'Pending';document.getElementById('info').textContent='District: '+(a.district||'—')+' | School/College: '+(a.school||'—')+' | Activity: '+(a.activity||'—');fillSlip();}
-function fillSlip(){const q=(id,v)=>document.getElementById(id).textContent=v||'—';q('sRid',a.registrationId);q('sName',a.name);q('sCat',a.type==='cultural'?'Cultural':(a.category||'Sports'));q('sDob',a.dob);q('sGender',a.gender);q('sMobile',a.mobile);q('sGuardian',a.guardian);q('sDistrict',a.district);q('sBlock',a.block);q('sSchool',a.school);q('sClass',a.className);q('sActivity',a.activity);q('sLevel',a.level);q('sStatus',a.status||'Pending');if(a.photoData)document.getElementById('sPhoto').src=a.photoData;if(a.signatureData)document.getElementById('sSign').src=a.signatureData;}
-function showSlip(){document.getElementById('slipSection').scrollIntoView({behavior:'smooth'})}function printSlip(){window.print()}function logout(){localStorage.removeItem('currentStudentProfile');localStorage.removeItem('currentStudent');location.href='login.html'}
+function fillSlip(){const q=(id,v)=>document.getElementById(id).textContent=v??'—';const safeA=(a.aadhaar||'').replace(/\D/g,'');const masked=safeA.length>=4?'XXXX XXXX '+safeA.slice(-4):'XXXX XXXX XXXX';q('sRid',a.registrationId);q('sDate',a.createdAt?new Date(a.createdAt).toLocaleDateString('en-IN'):'—');q('sName',a.name);q('sFather',a.fatherName);q('sMother',a.motherName);q('sDob',a.dob);q('sGender',a.gender);q('sCategory',a.categoryName||a.category);q('sStudentId',a.studentId);q('sAadhaar',masked);q('sNationality',a.nationality||'Indian');q('sAddress',a.address);q('sDistrict',a.district);q('sBlock',a.block);q('sMobile',a.mobile);q('sEmail',a.email);q('sLocality',a.locality);q('sSchool',a.school);q('sClass',a.className||a.courseName);q('sAcademicYear',a.academicYear);q('sCollegeRoll',a.collegeRollNo);q('sUniversityReg',a.universityRegistrationNo);q('sUniversityRoll',a.universityRollNo);q('sInstitution',a.institutionType);const cultural=a.type==='cultural';q('sProgramme',cultural?'Cultural':'Sports');q('sActivity',a.activity);q('sLevel',a.level);q('sStatus',a.status||'Pending');q('sAchievement',a.achievement||'Not provided');const slip=document.getElementById('officialSlip');slip.classList.toggle('sports-official',!cultural);slip.classList.toggle('cultural-official',cultural);document.getElementById('printTitle').textContent=cultural?'CULTURAL REGISTRATION FORM':'SPORTS REGISTRATION FORM';document.getElementById('printBadge').textContent=cultural?'🎭 CULTURAL PARTICIPATION':'🏅 SPORTS PARTICIPATION';if(a.photoData)document.getElementById('sPhoto').src=a.photoData;if(a.signatureData)document.getElementById('sSign').src=a.signatureData;}function showSlip(){document.getElementById('slipSection').scrollIntoView({behavior:'smooth'})}function printSlip(){window.print()}function logout(){localStorage.removeItem('currentStudentProfile');localStorage.removeItem('currentStudent');location.href='login.html'}
 </script></body></html>
